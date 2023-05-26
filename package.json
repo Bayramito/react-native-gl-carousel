@@ -1,0 +1,46 @@
+{
+  "name": "@bayramitto/react-native-gl-carousel",
+  "version": "0.0.7",
+  "description": "React Native component for creating a carousel with gl-transitions",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "test": "mocha --reporter spec",
+    "prepublish": "npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Bayramito/react-native-gl-carousel"
+  },
+  "keywords": [
+    "react-native",
+    "progress",
+    "stepper"
+  ],
+  "author": "bayram-arif",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Bayramito/react-native-gl-carousel#issues"
+  },
+  "homepage": "https://github.com/Bayramito/react-native-gl-carousel#readme",
+  "devDependencies": {
+    "@babel/core": "^7.12.9",
+    "@babel/runtime": "^7.12.5",
+    "@shopify/react-native-skia": "^0.1.191",
+    "babel-jest": "^26.6.3",
+    "eslint": "^7.32.0",
+    "jest": "^26.6.3",
+    "react": "18.2.0",
+    "react-native": "0.71.8",
+    "react-native-reanimated": "^3.1.0",
+    "typescript": "^4.8.3",
+    "react-native-gesture-handler": "2.10.1"
+  },
+  "peerDependencies": {
+    "react-native-reanimated": "2.x",
+    "@shopify/react-native-skia": "^0.1.x",
+    "react-native-gesture-handler": "2.x"
+  },
+  "dependencies": {}
+}
