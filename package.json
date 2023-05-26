@@ -1,6 +1,6 @@
 {
   "name": "@bayramitto/react-native-gl-carousel",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "React Native component for creating a carousel with gl-transitions",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
