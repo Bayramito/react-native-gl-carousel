@@ -1,4 +1,4 @@
-import React, {useCallback, useMemo} from 'react';
+import React, {useCallback, useMemo, useState} from 'react';
 import {Dimensions, View} from 'react-native';
 import {Gesture, GestureDetector} from 'react-native-gesture-handler';
 import {
@@ -14,6 +14,7 @@ import {
   Shader,
   clamp,
   useImage,
+  Skia,
 } from '@shopify/react-native-skia';
 
 import {snapPoint} from './Math';
@@ -24,6 +25,7 @@ import {
   glitchMemories,
   swirl,
   swap,
+  blurred,
 } from './transitions/index';
 
 const {width, height} = Dimensions.get('window');
@@ -43,14 +45,22 @@ interface GLCarouselProps {
   transitions: string[];
 }
 
-const availableTransitions = [cube, pageCurl, glitchMemories, swirl, swap];
+const availableTransitions = [
+  cube,
+  pageCurl,
+  glitchMemories,
+  swirl,
+  swap,
+  blurred,
+];
 export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
-  const effects =
-    transitions && transitions.length > 0
-      ? availableTransitions
-          .filter(t => transitions.includes(t))
-          .map(t => transition(t))
-      : [pageCurl].map(t => transition(t));
+  // const effects =
+  //   transitions && transitions.length > 0
+  //     ? availableTransitions
+  //         .filter(t => transitions.includes(t))
+  //         .map(t => transition(t))
+  //     : [pageCurl].map(t => transition(t));
+  const effects = transitions.map(t => transition(t));
   if (!Array.isArray(images)) {
     throw new Error('"images" prop must be an array of at least one image');
   } else if (effects.length === 0) {
@@ -63,7 +73,7 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
   const offset = useSharedValue(0);
   const progressLeft = useSharedValue(0);
   const progressRight = useSharedValue(0);
-  const assets = images.map(image => useImage(image));
+  const assets = images.map(i => useImage(i));
 
   const next = useCallback(() => {
     offset.value += 1;
@@ -137,22 +147,19 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
   const transition2 = useDerivedValue(() => {
     return at(effects, offset.value);
   });
+
   const assets1 = useDerivedValue(() => {
-    if (assets[0] === null) return null;
     return at(assets, offset.value - 1);
   });
 
   const assets2 = useDerivedValue(() => {
-    if (assets[1] === null) return null;
     return at(assets, offset.value);
   });
 
   const assets3 = useDerivedValue(() => {
-    if (assets[2] === null) return null;
     return at(assets, offset.value + 1);
   });
 
-  if (assets[0] === null) return null;
   return (
     <View style={{flex: 1}}>
       <GestureDetector gesture={Gesture.Race(panRight, panLeft)}>
@@ -179,6 +186,7 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
                 width={width}
                 height={height}
               />
+              <ImageRenderer1 images={images} offset={offset} />
             </Shader>
           </Fill>
         </Canvas>
@@ -186,3 +194,15 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
     </View>
   );
 };
+
+const ImageRenderer1 = ({images, offset}) => {
+  const image = useImage(getCurrentImage(images, offset.value - 1));
+  const assets1 = useDerivedValue(() => {
+    return at(image, offset.value - 1);
+  }, [image, offset]);
+  return (
+    <ImageShader image={assets1} fit="cover" width={width} height={height} />
+  );
+};
+const getCurrentImage = (array, index) =>
+  array[((index % array.length) + array.length) % array.length];

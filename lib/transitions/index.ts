@@ -8,3 +8,6 @@ export * from './swap';
 export * from './pageCurl';
 export * from './simpleZoom';
 export * from './stereoViewer';
+export * from './blur';
+export * from './luminance';
+export * from './butterflyWave';
