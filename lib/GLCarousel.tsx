@@ -186,7 +186,6 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
                 width={width}
                 height={height}
               />
-              <ImageRenderer1 images={images} offset={offset} />
             </Shader>
           </Fill>
         </Canvas>
@@ -194,15 +193,3 @@ export const GLCarousel = ({images, transitions}: GLCarouselProps) => {
     </View>
   );
 };
-
-const ImageRenderer1 = ({images, offset}) => {
-  const image = useImage(getCurrentImage(images, offset.value - 1));
-  const assets1 = useDerivedValue(() => {
-    return at(image, offset.value - 1);
-  }, [image, offset]);
-  return (
-    <ImageShader image={assets1} fit="cover" width={width} height={height} />
-  );
-};
-const getCurrentImage = (array, index) =>
-  array[((index % array.length) + array.length) % array.length];
